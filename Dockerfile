@@ -1,5 +1,5 @@
 # Use the official Swift image based on Ubuntu
-FROM swift:6.0.2-focal AS build
+FROM swift:6.0.2-jammy AS build
 
 # Set the working directory in the container
 WORKDIR /app
@@ -11,7 +11,7 @@ COPY . .
 RUN swift build -c release
 
 # Create a smaller final image for running the app
-FROM ubuntu:24.04 AS runtime
+FROM swift:6.0.2-jammy AS runtime
 
 # Install necessary runtime dependencies
 RUN apt-get update && apt-get install -y \
