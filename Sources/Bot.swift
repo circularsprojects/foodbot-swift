@@ -17,9 +17,9 @@ struct foodbot: DiscordBotApp {
     var startTime: Date
     
     init() async {
-        var env = ProcessInfo.processInfo.environment
-        var token = env["discord-token"]
-        guard let token = token else { fatalError("No token provided. Set `discord-token` in your environment.") }
+        let env = ProcessInfo.processInfo.environment
+        let token = env["DISCORD_TOKEN"]
+        guard let token = token else { fatalError("No token provided. Set `DISCORD_TOKEN` in your environment.") }
         
         bot = await BotGatewayManager(
             eventLoopGroup: httpClient.eventLoopGroup,

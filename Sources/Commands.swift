@@ -25,11 +25,25 @@ func timeSinceStart(from startTime: Date) -> String {
     let now = Date()
     let elapsed = now.timeIntervalSince(startTime)
     
-    let formatter = DateComponentsFormatter()
-    formatter.unitsStyle = .full
-    formatter.allowedUnits = [.day, .hour, .minute]
+    // Calculate days, hours, and minutes manually
+    let days = Int(elapsed) / 86400
+    let hours = (Int(elapsed) % 86400) / 3600
+    let minutes = (Int(elapsed) % 3600) / 60
     
-    return formatter.string(from: elapsed) ?? "0 seconds"
+    // Build the formatted string
+    var components: [String] = []
+    if days > 0 {
+        components.append("\(days) day" + (days > 1 ? "s" : ""))
+    }
+    if hours > 0 {
+        components.append("\(hours) hour" + (hours > 1 ? "s" : ""))
+    }
+    if minutes > 0 {
+        components.append("\(minutes) minute" + (minutes > 1 ? "s" : ""))
+    }
+    
+    // Join components with commas and return the result
+    return components.isEmpty ? "0 minutes" : components.joined(separator: ", ")
 }
 
 extension foodbot {
@@ -107,7 +121,7 @@ extension foodbot {
                                     .small()
                                 Text("version v0.1")
                                 Text("uptime: \(timeSinceStart(from: startTime))")
-                                Text("OS: \(ProcessInfo().operatingSystemVersionString)")
+                                Text("OS: \(ProcessInfo.processInfo.operatingSystemVersionString)")
                             }
                         }
                         .setColor(.green)
