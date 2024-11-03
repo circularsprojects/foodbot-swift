@@ -1,0 +1,5 @@
+services:
+    foodbot:
+        build: .
+        environment:
+            DISCORD_TOKEN: "<replace me>"
