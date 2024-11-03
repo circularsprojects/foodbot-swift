@@ -25,12 +25,10 @@ func timeSinceStart(from startTime: Date) -> String {
     let now = Date()
     let elapsed = now.timeIntervalSince(startTime)
     
-    // Calculate days, hours, and minutes manually
     let days = Int(elapsed) / 86400
     let hours = (Int(elapsed) % 86400) / 3600
     let minutes = (Int(elapsed) % 3600) / 60
     
-    // Build the formatted string
     var components: [String] = []
     if days > 0 {
         components.append("\(days) day" + (days > 1 ? "s" : ""))
@@ -42,7 +40,6 @@ func timeSinceStart(from startTime: Date) -> String {
         components.append("\(minutes) minute" + (minutes > 1 ? "s" : ""))
     }
     
-    // Join components with commas and return the result
     return components.isEmpty ? "0 minutes" : components.joined(separator: ", ")
 }
 

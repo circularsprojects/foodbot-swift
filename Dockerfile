@@ -10,17 +10,9 @@ COPY . .
 # Build the Swift package
 RUN swift build -c release
 
-# Create a smaller final image for running the app
-FROM swift:6.0.2-jammy AS runtime
+FROM build AS runtime
 
-# Install necessary runtime dependencies
-RUN apt-get update && apt-get install -y \
-    libcurl4 \
-    libatomic1 \
-    && rm -rf /var/lib/apt/lists/*
-
-# Copy the built executable from the build stage
+# Copy the built executable
 COPY --from=build /app/.build/release/foodbot-swift /usr/local/bin/foodbot-swift
 
-# Set the entrypoint to run your Swift executable
 ENTRYPOINT ["foodbot-swift"]
