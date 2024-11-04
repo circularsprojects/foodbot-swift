@@ -21,28 +21,6 @@ let foodCategories: [String] = [
     "samosa"
 ]
 
-func timeSinceStart(from startTime: Date) -> String {
-    let now = Date()
-    let elapsed = now.timeIntervalSince(startTime)
-    
-    let days = Int(elapsed) / 86400
-    let hours = (Int(elapsed) % 86400) / 3600
-    let minutes = (Int(elapsed) % 3600) / 60
-    
-    var components: [String] = []
-    if days > 0 {
-        components.append("\(days) day" + (days > 1 ? "s" : ""))
-    }
-    if hours > 0 {
-        components.append("\(hours) hour" + (hours > 1 ? "s" : ""))
-    }
-    if minutes > 0 {
-        components.append("\(minutes) minute" + (minutes > 1 ? "s" : ""))
-    }
-    
-    return components.isEmpty ? "0 minutes" : components.joined(separator: ", ")
-}
-
 extension foodbot {
     var Commands: Group {
         Group {
@@ -58,9 +36,9 @@ extension foodbot {
                 try? await bot.updateOriginalInteractionResponse(of: i) {
                     Message {
                         MessageEmbed {
-                            Title("food image")
+                            Title("Food Image")
                             Description {
-                                Text("category: \(foodCategory)")
+                                Text("Category: `\(foodCategory)`")
                             }
                             Image(Embed.DynamicURL(from: food.image))
                         }
@@ -68,7 +46,7 @@ extension foodbot {
                     }
                 }
             }
-            .description("get a picture of food")
+            .description("Get a picture of food")
             .integrationType(.all, contexts: .all)
             
             Command("category") { i, cmd, dbreq in
@@ -85,9 +63,9 @@ extension foodbot {
                 try? await bot.updateOriginalInteractionResponse(of: i) {
                     Message {
                         MessageEmbed {
-                            Title("food image")
+                            Title("Food Image")
                             Description {
-                                Text("category: \(foodCategory)")
+                                Text("`Category: \(foodCategory)`")
                             }
                             Image(Embed.DynamicURL(from: food.image))
                         }
@@ -96,36 +74,38 @@ extension foodbot {
                 }
             }
             .addingOptions {
-                StringOption(name: "category", description: "food category")
+                StringOption(name: "category", description: "Food Category")
                     .required()
                     .choices { foodCategories.map{.string($0)} }
             }
-            .description("get a certain category of food")
+            .description("Get a certain category of food")
             .integrationType(.all, contexts: .all)
             
             Command("info") { i, cmd, dbreq in
                 try? await bot.createInteractionResponse(to: i, type: .deferredChannelMessageWithSource())
                 
+                let cacheStorage = await cache.storage
+                
                 try? await bot.updateOriginalInteractionResponse(of: i) {
                     Message {
                         MessageEmbed {
-                            Title("food-bot info")
+                            Title("Food-Bot Info")
                             Description {
-                                Text("food-bot swift rewrite by @circular")
-                                Link("https://circulars.dev")
-                                Text("built with DDBKit")
+                                Text("Food-Bot [Swift Rewrite](https://github.com/circularsprojects/foodbot-swift) by [@circular](https://circulars.dev)")
+                                Text("Built with [DDBKit](https://ddbkit.llsc12.me/)")
                                 Heading("Stats")
                                     .small()
-                                Text("version v0.1")
-                                Text("uptime: \(timeSinceStart(from: startTime))")
-                                Text("OS: \(ProcessInfo.processInfo.operatingSystemVersionString)")
+                                Text("Version: `v1.0 prerelease`")
+                                Text("Bot Started: <t:\(Int(startTime.timeIntervalSince1970)):R>")
+                                Text("Server Count: \(cacheStorage.guilds.count)")
+                                Text("Host OS: \(ProcessInfo.processInfo.operatingSystemVersionString.replacingOccurrences(of: "Version", with: "MacOS"))")
                             }
                         }
                         .setColor(.green)
                     }
                 }
             }
-            .description("get info about the bot")
+            .description("Get info about the bot")
             .integrationType(.all, contexts: .all)
         }
     }

@@ -27,13 +27,13 @@ struct foodbot: DiscordBotApp {
             token: token,
             largeThreshold: 250,
             presence: .init(activities: [], status: .online, afk: false),
-            intents: [.guildMessages]
+            intents: [.guilds]
         )
         cache = await .init(
             gatewayManager: bot,
-            intents: .all,
-            requestAllMembers: .enabledWithPresences,
-            messageCachingPolicy: .saveEditHistoryAndDeleted
+            intents: [.guilds],
+            requestAllMembers: .disabled,
+            messageCachingPolicy: .normal
         )
         startTime = .now
     }
