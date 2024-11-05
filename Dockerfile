@@ -10,7 +10,7 @@ COPY . .
 # Build the Swift package
 RUN swift build -c release
 
-FROM build AS runtime
+FROM swift:6.0.2-jammy-slim AS runtime
 
 # Copy the built executable
 COPY --from=build /app/.build/release/foodbot-swift /usr/local/bin/foodbot-swift
