@@ -15,9 +15,9 @@ struct foodbot: DiscordBotApp {
     var cache: Cache
     let httpClient = HTTPClient()
     var startTime: Date
+    let env = ProcessInfo.processInfo.environment
     
     init() async {
-        let env = ProcessInfo.processInfo.environment
         let token = env["DISCORD_TOKEN"]
         guard let token = token else { fatalError("No token provided. Set `DISCORD_TOKEN` in your environment.") }
         
@@ -26,7 +26,7 @@ struct foodbot: DiscordBotApp {
             httpClient: httpClient,
             token: token,
             largeThreshold: 250,
-            presence: .init(activities: [], status: .online, afk: false),
+            presence: .init(activities: [.init(name: "meow", type: .custom, state: "food-bot swift rewrite :3")], status: .online, afk: false),
             intents: [.guilds]
         )
         cache = await .init(
@@ -54,13 +54,19 @@ struct foodbot: DiscordBotApp {
                 }
             }
         }
+        let analyticsEnabled = env["ANALYTICS_ENABLED"]
+        if let analyticsEnabled {
+            if analyticsEnabled.lowercased() == "true" {
+                let analyticsTask = Task { await startWebServer() }
+            }
+        }
     }
     
     var body: [any BotScene] {
         Commands
         
         ReadyEvent { ready in
-            print("foodbot online")
+            print("Foodbot online!")
         }
     }
 }

@@ -9,7 +9,8 @@ let package = Package(
         .macOS(.v13)
     ],
     dependencies: [
-        .package(url: "https://github.com/DDBKit/DDBKit", branch: "main")
+        .package(url: "https://github.com/DDBKit/DDBKit", branch: "main"),
+        .package(url: "https://github.com/swhitty/FlyingFox.git", .upToNextMajor(from: "0.19.0"))
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -21,6 +22,7 @@ let package = Package(
                 .product(name: "Database", package: "DDBKit"),
                 .product(name: "DDBKitUtilities", package: "DDBKit"),
                 .product(name: "DDBKitFoundation", package: "DDBKit"),
+                .product(name: "FlyingFox", package: "FlyingFox"),
             ]
         ),
     ]
