@@ -4,3 +4,5 @@ services:
         environment:
             DISCORD_TOKEN: "<replace me>"
             ANALYTICS_ENABLED: "false"
+        ports:
+            - 3100:3100 # make sure to change if u change the analytics port
