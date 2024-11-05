@@ -17,6 +17,7 @@ struct foodbot: DiscordBotApp {
     let httpClient = HTTPClient()
     var startTime: Date
     let env = ProcessInfo.processInfo.environment
+    var logger: Logger
     
     init() async {
         let token = env["DISCORD_TOKEN"]
@@ -36,15 +37,14 @@ struct foodbot: DiscordBotApp {
             requestAllMembers: .disabled,
             messageCachingPolicy: .normal
         )
-        DiscordGlobalConfiguration.makeLogger = { label in
-            let stdoutHandler = StreamLogHandler.standardOutput(label: label) // stdout
-            return Logger(label: label, factory: { _ in stdoutHandler })
-        }
+        var logger = DiscordGlobalConfiguration.makeLogger("foodbot")
+        self.logger = logger
         startTime = .now
     }
     
     func boot() async throws {
         AssignGlobalCatch { bot, error, i in
+            logger.error("\(error)")
             try? await bot.updateOriginalInteractionResponse(of: i) {
                 Message {
                     MessageEmbed {
@@ -71,7 +71,7 @@ struct foodbot: DiscordBotApp {
         Commands
         
         ReadyEvent { ready in
-            print("Foodbot online!")
+            logger.info("Foodbot online!")
         }
     }
 }

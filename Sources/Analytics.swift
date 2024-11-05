@@ -30,7 +30,7 @@ extension foodbot {
                     body: "{\"servers\":\(cacheStorage.guilds.count)}".data(using: .utf8)!
                 )
             }
-            print("Starting analytics server on http://127.0.0.1:\(getPort() ?? 3100)")
+            logger.info("Starting analytics server on http://127.0.0.1:\(getPort() ?? 3100)")
             try await webServer.run()
         } catch {
             fatalError("Analytics server failed to initialize. \(error)")
