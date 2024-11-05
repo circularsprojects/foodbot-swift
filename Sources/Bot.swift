@@ -7,6 +7,7 @@
 import DDBKit
 import DDBKitUtilities
 import Foundation
+import Logging
 
 @main
 
@@ -35,6 +36,10 @@ struct foodbot: DiscordBotApp {
             requestAllMembers: .disabled,
             messageCachingPolicy: .normal
         )
+        DiscordGlobalConfiguration.makeLogger = { label in
+            let stdoutHandler = StreamLogHandler.standardOutput(label: label) // stdout
+            return Logger(label: label, factory: { _ in stdoutHandler })
+        }
         startTime = .now
     }
     
