@@ -95,7 +95,7 @@ extension foodbot {
                                 Text("Built with [DDBKit](https://ddbkit.llsc12.me/)")
                                 Heading("Stats")
                                     .small()
-                                Text("Version: `v1.0 prerelease`")
+                                Text("Version: `v1.0`")
                                 Text("Bot Started: <t:\(Int(startTime.timeIntervalSince1970)):R>")
                                 Text("Server Count: \(cacheStorage.guilds.count)")
                                 Text("Host OS: \(ProcessInfo.processInfo.operatingSystemVersionString.replacingOccurrences(of: "Version", with: "MacOS"))")
