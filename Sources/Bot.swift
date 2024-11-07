@@ -37,7 +37,8 @@ struct foodbot: DiscordBotApp {
             requestAllMembers: .disabled,
             messageCachingPolicy: .normal
         )
-        var logger = DiscordGlobalConfiguration.makeLogger("foodbot")
+        
+        let logger = DiscordGlobalConfiguration.makeLogger("foodbot")
         self.logger = logger
         startTime = .now
     }
