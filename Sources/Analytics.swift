@@ -26,6 +26,7 @@ let influxURL = env["INFLUX_URL"]
 let influxToken = env["INFLUX_TOKEN"]
 let influxBucket = env["INFLUX_BUCKET"]
 let influxOrg = env["INFLUX_ORG"]
+let influxLocation = env["INFLUX_LOCATION"]
 
 actor CommandBuffer {
     var commandBuffer: [String] = []
@@ -52,21 +53,22 @@ actor InfluxDBExtension: DDBKitExtension {
               let influxBucket = influxBucket,
               let influxOrg = influxOrg
         else {
-            logger.error("Not all InfluxDB environment variables are set. Analytics will be disabled.")
+            logger.error("Not all required InfluxDB environment variables are set. Analytics will be disabled.")
             return
         }
         
         let commandBuffer = CommandBuffer()
+        let location = influxLocation ?? ProcessInfo.processInfo.hostName
         
         instance.commands = instance.commands.map {
             $0
                 .postAction { cmd, _ in
-                    await commandBuffer.append("command,location=\(ProcessInfo.processInfo.hostName),command=\(cmd.baseInfo.name) count=1i \(Int(Date().timeIntervalSince1970 * 1000))")
+                    await commandBuffer.append("command,location=\(location),command=\(cmd.baseInfo.name) count=1i \(Int(Date().timeIntervalSince1970 * 1000))")
                 }
         }
-        let _ = setInterval(seconds: 30) { [cache = instance.cache] in
+        let _ = setInterval(seconds: 3600) { [cache = instance.cache] in
             let cacheStorage = await cache.storage
-            var data = "servers,location=\(ProcessInfo.processInfo.hostName) count=\(cacheStorage.guilds.count)i \(Int(Date().timeIntervalSince1970 * 1000))"
+            var data = "servers,location=\(location) count=\(cacheStorage.guilds.count)i \(Int(Date().timeIntervalSince1970 * 1000))"
             let commands = await commandBuffer.get()
             for command in commands {
                 data += "\n" + command

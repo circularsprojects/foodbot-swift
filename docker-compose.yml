@@ -10,3 +10,5 @@ services:
             # INFLUX_TOKEN: ""
             # INFLUX_BUCKET: ""
             # INFLUX_ORG: ""
+            # This value is optional, if unset the analytics module will use the hostname as the location when sending data.
+            # INFLUX_LOCATION: ""
