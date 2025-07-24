@@ -10,9 +10,10 @@ Replace the bot token environment variable in `docker-compose.yml`, run `docker 
 Alternatively, you can install swift manually and compile the bot with `swift build` and `swift run`.
 
 ## Analytics
-You can enable an "analytics server" by setting the environment variable `ANALYTICS_ENABLED` to true.
+(the bot used to have an analytics webserver, but this has been removed)
 
-By default, this server runs on port 3100, but can be changed by setting `ANALYTICS_PORT`.
+The bot has in-built support for analytics using InfluxDB.\
+You can configure the env variables for InfluxDB in the docker compose file, or however you would normally manage environment variables.\
+If you set `ANALYTICS_ENABLED` to true, you *must* also provide a value for each of the `INFLUXDB` environment variables, or it will not work.
 
-Current API endpoints:
-- `/servers`: Returns a JSON object with the amount of servers the bot is in. (`{"servers":1337}`)
+The analytics module is meant to be as modular as possible. It's loaded as a DDBKit extension, and should be able to be dropped into any other DDBKit project with minimal modification.
