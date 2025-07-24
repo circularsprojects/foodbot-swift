@@ -43,10 +43,10 @@ struct foodbot: DiscordBotApp {
         startTime = .now
     }
     
-    func boot() async throws {
-        AssignGlobalCatch { bot, error, i in
-            logger.error("\(error)")
-            try? await bot.updateOriginalInteractionResponse(of: i) {
+    func onBoot() async throws {
+        AssignGlobalCatch { error, i in
+            logger.error("An error occurred while running a command: \(error)")
+            try? await i.editResponse {
                 Message {
                     MessageEmbed {
                         Title("⛔️ Encountered a fatal error!")

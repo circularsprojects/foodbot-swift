@@ -24,8 +24,8 @@ let foodCategories: [String] = [
 extension foodbot {
     var Commands: Group {
         Group {
-            Command("food") { i, cmd, dbreq in
-                try? await bot.createInteractionResponse(to: i, type: .deferredChannelMessageWithSource())
+            Command("food") { i in
+                try? await i.respond(with: .deferredChannelMessageWithSource())
                 let request = HTTPClientRequest(url: "https://circulars.dev/foodish/api")
                 let response = try await httpClient.execute(request, timeout: .seconds(30))
                 
@@ -33,7 +33,8 @@ extension foodbot {
                 
                 let food = try JSONDecoder().decode(food.self, from: body)
                 let foodCategory = food.image.split(separator: "/")[4]
-                try? await bot.updateOriginalInteractionResponse(of: i) {
+                
+                try? await i.editResponse {
                     Message {
                         MessageEmbed {
                             Title("Food Image")
@@ -49,10 +50,10 @@ extension foodbot {
             .description("Get a picture of food")
             .integrationType(.all, contexts: .all)
             
-            Command("category") { i, cmd, dbreq in
-                try? await bot.createInteractionResponse(to: i, type: .deferredChannelMessageWithSource())
+            Command("category") { i in
+                try? await i.respond(with: .deferredChannelMessageWithSource())
                 
-                let category = try cmd.requireOption(named: "category").requireString()
+                let category = try await i.getString(from: "category").requireValue()
                 let request = HTTPClientRequest(url: "https://circulars.dev/foodish/api/images/\(category)")
                 let response = try await httpClient.execute(request, timeout: .seconds(30))
                 
@@ -60,7 +61,7 @@ extension foodbot {
                 
                 let food = try JSONDecoder().decode(food.self, from: body)
                 let foodCategory = food.image.split(separator: "/")[4]
-                try? await bot.updateOriginalInteractionResponse(of: i) {
+                try? await i.editResponse {
                     Message {
                         MessageEmbed {
                             Title("Food Image")
@@ -81,12 +82,12 @@ extension foodbot {
             .description("Get a certain category of food")
             .integrationType(.all, contexts: .all)
             
-            Command("info") { i, cmd, dbreq in
-                try? await bot.createInteractionResponse(to: i, type: .deferredChannelMessageWithSource())
+            Command("info") { i in
+                try? await i.respond(with: .deferredChannelMessageWithSource())
                 
                 let cacheStorage = await cache.storage
                 
-                try? await bot.updateOriginalInteractionResponse(of: i) {
+                try? await i.editResponse {
                     Message {
                         MessageEmbed {
                             Title("Food-Bot Info")
