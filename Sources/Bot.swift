@@ -60,11 +60,8 @@ struct foodbot: DiscordBotApp {
                 }
             }
         }
-        let analyticsEnabled = env["ANALYTICS_ENABLED"]
-        if let analyticsEnabled {
-            if analyticsEnabled.lowercased() == "true" {
-                let _ = Task { await startWebServer() }
-            }
+        if env["ANALYTICS_ENABLED"]?.lowercased() == "true" {
+            RegisterExtension(InfluxDBExtension())
         }
     }
     
